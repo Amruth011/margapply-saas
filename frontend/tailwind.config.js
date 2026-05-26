@@ -53,8 +53,12 @@ module.exports = {
         "marquee-vertical": "marquee-vertical var(--duration) linear infinite",
         orbit: "orbit var(--duration) linear infinite",
         "spin-around": "spin-around calc(var(--speed, 2s) * 1) linear infinite",
+        dash: "dash 20s linear infinite",
       },
       keyframes: {
+        dash: {
+          to: { strokeDashoffset: "-1000" }
+        },
         "border-beam": {
           "100%": {
             "offset-distance": "100%",

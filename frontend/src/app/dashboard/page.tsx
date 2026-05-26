@@ -2,6 +2,7 @@ import React from "react";
 import { PipelineVisualizer } from "@/components/dashboard/pipeline-visualizer";
 import { StatsGrid } from "@/components/dashboard/stats-grid";
 import { LedgerTable } from "@/components/dashboard/ledger-table";
+import { StrategyGate } from "@/components/dashboard/strategy-gate";
 
 export default function DashboardPage() {
   return (
@@ -27,7 +28,7 @@ export default function DashboardPage() {
         }
       `}} />
       
-      <div className="min-h-screen flex flex-col pb-20 md:pb-0 md:pl-64 bg-[#fbf9f9] text-[#1b1b1c] font-['Inter',_sans-serif]">
+      <div className="bg-slate-50 min-h-screen p-8 flex flex-col pb-20 md:pb-0 md:pl-64 text-slate-900 font-sans">
         {/* TopAppBar */}
         <header className="bg-background dark:bg-background w-full top-0 sticky border-b border-outline-variant dark:border-outline-variant z-50">
           <div className="flex justify-between items-center px-6 h-16 w-full max-w-screen-2xl mx-auto">
@@ -79,6 +80,9 @@ export default function DashboardPage() {
           <StatsGrid />
           <LedgerTable />
         </main>
+
+        {/* Modal Gates */}
+        <StrategyGate />
 
         {/* Footer */}
         <footer className="w-full py-6 px-8 flex flex-col md:flex-row justify-between items-center gap-4 mt-auto border-t border-outline-variant bg-background dark:bg-background">
