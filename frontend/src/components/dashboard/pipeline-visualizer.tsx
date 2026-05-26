@@ -1,12 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { useAgentState } from "@/hooks/use-agent-state";
 import { Particles } from "@/components/ui/particles";
+import { AnimatedBeam } from "@/components/ui/animated-beam";
 
 export function PipelineVisualizer() {
   const { state, isConnected } = useAgentState();
   const activeStage = state.pipelineStage;
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+  const personaRef = useRef<HTMLDivElement>(null);
+  const ingestionRef = useRef<HTMLDivElement>(null);
+  const strategyRef = useRef<HTMLDivElement>(null);
+  const tailoringRef = useRef<HTMLDivElement>(null);
+  const submissionRef = useRef<HTMLDivElement>(null);
   
   const getStageClass = (stage: string) => {
     return activeStage === stage 
@@ -33,38 +41,44 @@ export function PipelineVisualizer() {
           {isConnected ? 'Connected' : 'Disconnected'}
         </span>
       </div>
-      <div className="relative h-48 w-full flex items-center justify-between px-4">
-        {/* SVG Connections */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
-          <path className="animated-beam-path" d="M 12% 50% Q 25% 20%, 38% 50%" fill="none" stroke="#cbd5e1" strokeWidth="2"></path>
-          <path className="animated-beam-path" d="M 38% 50% Q 50% 80%, 62% 50%" fill="none" stroke="#cbd5e1" strokeWidth="2"></path>
-          <path className="animated-beam-path" d="M 62% 50% Q 75% 20%, 88% 50%" fill="none" stroke="#cbd5e1" strokeWidth="2"></path>
-        </svg>
+      <div ref={containerRef} className="relative h-48 w-full flex items-center justify-between px-4">
         {/* Nodes */}
-        <div className="flex flex-col items-center z-10 gap-2">
+        <div ref={personaRef} className="flex flex-col items-center z-10 gap-2">
+          <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 shadow-sm transition-colors duration-300 ${getStageClass('Persona')}`}>
+            <span className={`material-symbols-outlined ${getIconClass('Persona')}`}>account_circle</span>
+          </div>
+          <span className="text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant">Persona</span>
+        </div>
+        <div ref={ingestionRef} className="flex flex-col items-center z-10 gap-2">
           <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 shadow-sm transition-colors duration-300 ${getStageClass('Ingestion')}`}>
             <span className={`material-symbols-outlined ${getIconClass('Ingestion')}`}>download</span>
           </div>
           <span className="text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant">Ingestion</span>
         </div>
-        <div className="flex flex-col items-center z-10 gap-2">
+        <div ref={strategyRef} className="flex flex-col items-center z-10 gap-2">
           <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 shadow-sm transition-colors duration-300 ${getStageClass('Strategy')}`}>
             <span className={`material-symbols-outlined ${getIconClass('Strategy')}`}>psychology</span>
           </div>
           <span className="text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant">Strategy</span>
         </div>
-        <div className="flex flex-col items-center z-10 gap-2">
+        <div ref={tailoringRef} className="flex flex-col items-center z-10 gap-2">
           <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 shadow-sm transition-colors duration-300 ${getStageClass('Tailoring')}`}>
             <span className={`material-symbols-outlined ${getIconClass('Tailoring')}`}>architecture</span>
           </div>
           <span className="text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant">Tailoring</span>
         </div>
-        <div className="flex flex-col items-center z-10 gap-2">
+        <div ref={submissionRef} className="flex flex-col items-center z-10 gap-2">
           <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 shadow-sm transition-colors duration-300 ${getStageClass('Submission')}`}>
             <span className={`material-symbols-outlined ${getIconClass('Submission')}`}>send</span>
           </div>
           <span className="text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant">Submission</span>
         </div>
+
+        {/* Animated Beams */}
+        <AnimatedBeam containerRef={containerRef} fromRef={personaRef} toRef={ingestionRef} curvature={-20} />
+        <AnimatedBeam containerRef={containerRef} fromRef={ingestionRef} toRef={strategyRef} curvature={20} />
+        <AnimatedBeam containerRef={containerRef} fromRef={strategyRef} toRef={tailoringRef} curvature={-20} />
+        <AnimatedBeam containerRef={containerRef} fromRef={tailoringRef} toRef={submissionRef} curvature={20} />
       </div>
     </section>
   );

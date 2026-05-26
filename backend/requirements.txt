@@ -5,3 +5,7 @@ pydantic
 chromadb
 playwright
 python-multipart
+httpx
+python-dotenv
+pypdf
+

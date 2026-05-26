@@ -1,0 +1,41 @@
+{
+  "name": "Amruth Kumar M",
+  "email": "amruth.kumar.portfolio@gmail.com",
+  "phone": "+91 9148159827",
+  "skills": [
+    "Python",
+    "Machine Learning",
+    "RAG systems",
+    "SQL",
+    "PySpark",
+    "Pandas",
+    "NumPy",
+    "LangGraph",
+    "LangChain",
+    "TensorFlow",
+    "PyTorch",
+    "Scikit-Learn",
+    "Flask",
+    "AWS",
+    "Vercel",
+    "GitHub",
+    "Technical Communication",
+    "Client-Facing Presentation"
+  ],
+  "experience": [
+    {
+      "role": "Data Science Intern",
+      "company": "iStudio Remote",
+      "duration": "Feb 2026 to Present",
+      "description": "Built ML models and Python preprocessing pipelines to improve training data quality for AI workflows. Delivered model insights through Streamlit dashboards for stakeholder review. Reduced manual review by 40% via 3 automated stages, cutting pipeline cycles from days to hours. Developed a Streamlit dashboard with SHAP explainability and ROI simulation. Identified 937 high-risk customers worth ₹47.4L revenue using cohort analysis. Built end-to-end ML pipeline achieving AUC-ROC 0.9989 and 98.76% accuracy in churn prediction. Spearheaded data science projects and collaborated with cross-functional teams to drive business outcomes."
+    }
+  ],
+  "education": [
+    {
+      "degree": "B.Tech in Artificial Intelligence and Data Science",
+      "institution": "REVA University",
+      "year": "Dec 2023 – Jun 2026"
+    }
+  ],
+  "summary": "Highly motivated Data Science Intern with hands-on experience building enterprise-grade ML models and Python pipelines to optimize training data quality. Proficient in Python, Machine Learning, and RAG systems, with a strong background in client-facing technical communication, system-level troubleshooting, and cross-functional backend engineering."
+}
