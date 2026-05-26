@@ -738,11 +738,20 @@ async def graph_runner(websocket: WebSocket):
                     await websocket.send_json(state)
 
                     if state.get("status") == "Awaiting_Approval":
-                        if strategy_approval_event:
-                            await strategy_approval_event.wait()
-                            strategy_approval_event.clear()
-                        state["status"] = "Approved"
-                        await websocket.send_json(state)
+                        auto_pilot_enabled = os.environ.get("AUTO_PILOT", "false").lower() == "true"
+                        if auto_pilot_enabled:
+                            if state.get("suggested_roles"):
+                                global pending_submission
+                                pending_submission = state["suggested_roles"][0]
+                                print(f"[auto-pilot] Automatically targetting top scoring role: {pending_submission['title']} @ {pending_submission['company']} ({pending_submission.get('score', 0)}%)")
+                            state["status"] = "Approved"
+                            await websocket.send_json(state)
+                        else:
+                            if strategy_approval_event:
+                                await strategy_approval_event.wait()
+                                strategy_approval_event.clear()
+                            state["status"] = "Approved"
+                            await websocket.send_json(state)
 
                     await asyncio.sleep(2)
     except WebSocketDisconnect:

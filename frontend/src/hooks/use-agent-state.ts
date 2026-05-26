@@ -61,6 +61,16 @@ export interface AgentState {
   application_ledger?: LedgerEntry[];
 }
 
+
+const getWsUrl = (path: string = "/ws/agent-state") => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (envUrl) {
+    const wsBase = envUrl.replace(/^http/, "ws");
+    return `${wsBase}${path}`;
+  }
+  return `ws://localhost:8000${path}`;
+};
+
 export function useAgentState() {
   const [state, setState] = useState<AgentState>({
     pipelineStage: "Persona",
@@ -79,7 +89,7 @@ export function useAgentState() {
         console.error("Error closing previous ws", e);
       }
     }
-    const ws = new WebSocket("ws://localhost:8000/ws/agent-state");
+    const ws = new WebSocket(getWsUrl());
     ws.onopen = () => {
       setIsConnected(true);
       ws.send(JSON.stringify({ jd_input: jdInput }));
@@ -99,7 +109,7 @@ export function useAgentState() {
   };
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8000/ws/agent-state");
+    const ws = new WebSocket(getWsUrl());
 
     ws.onopen = () => {
       setIsConnected(true);

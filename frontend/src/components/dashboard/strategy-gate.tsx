@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { useAgentState, type SuggestedRole } from "@/hooks/use-agent-state";
 import { Button } from "@/components/ui/button";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 // ── Inline Toast ──────────────────────────────────────────────────────────────
 interface ToastProps {
   message: string;
@@ -205,7 +207,7 @@ export function StrategyGate() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("http://localhost:8000/submit-application", {
+      const res = await fetch(`${API_URL}/submit-application`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ selected_role: selectedRole }),
@@ -223,7 +225,7 @@ export function StrategyGate() {
     if (isSubmitting) return;
     // Reject = approve without a specific role selection (pipeline continues)
     try {
-      await fetch("http://localhost:8000/approve-strategy", { method: "POST" });
+      await fetch(`${API_URL}/approve-strategy`, { method: "POST" });
     } catch (e) {
       console.error("Reject failed:", e);
     }

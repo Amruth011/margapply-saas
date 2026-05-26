@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export interface UserProfile {
   name: string;
   email: string;
@@ -49,7 +51,7 @@ export function ResumeUploader() {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const res = await fetch("http://localhost:8000/get-profile");
+        const res = await fetch(`${API_URL}/get-profile`);
         if (res.ok) {
           const data = await res.json();
           // Check if it's a non-empty profile
@@ -132,7 +134,7 @@ export function ResumeUploader() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:8000/upload-resume", {
+      const response = await fetch(`${API_URL}/upload-resume`, {
         method: "POST",
         body: formData,
       });
