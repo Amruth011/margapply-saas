@@ -18,67 +18,105 @@ export function PipelineVisualizer() {
   
   const getStageClass = (stage: string) => {
     return activeStage === stage 
-      ? "bg-primary border-primary-container" 
-      : "bg-surface-container border-primary-container";
+      ? "bg-emerald-600 border-emerald-500 shadow-md shadow-emerald-100 scale-110" 
+      : "bg-slate-50 border-slate-200 hover:border-slate-350";
   };
   
   const getIconClass = (stage: string) => {
-    return activeStage === stage ? "text-white" : "text-primary";
+    return activeStage === stage ? "text-white" : "text-slate-400";
+  };
+
+  const getLabelClass = (stage: string) => {
+    return activeStage === stage
+      ? "text-emerald-700 font-black scale-105"
+      : "text-slate-400 font-semibold";
   };
 
   return (
-    <section className="relative mb-8 overflow-hidden rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <section className="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.015)] select-none">
       <Particles
         className="absolute inset-0 z-0"
-        quantity={100}
+        quantity={60}
         ease={80}
-        color="#0f172a"
+        color="#10b981"
         refresh
       />
+      
       <div className="relative z-10 flex justify-between items-center mb-6">
-        <h3 className="font-headline font-bold text-slate-900">LangGraph Pipeline</h3>
-        <span className={`text-xs px-2 py-1 rounded-full font-label ${isConnected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+        <div className="flex items-center gap-2">
+          <span className="material-symbols-outlined text-emerald-600 text-lg">route</span>
+          <h3 className="font-headline font-bold text-slate-900 text-sm">LangGraph Pipeline</h3>
+        </div>
+        <span className={`text-[10px] font-black px-2.5 py-1 rounded-full font-label uppercase tracking-widest border ${
+          isConnected 
+            ? 'bg-emerald-50 border-emerald-200 text-emerald-700' 
+            : 'bg-red-50 border-red-200 text-red-750'
+        }`}>
           {isConnected ? 'Connected' : 'Disconnected'}
         </span>
       </div>
-      <div ref={containerRef} className="relative h-48 w-full flex items-center justify-between px-4">
-        {/* Nodes */}
-        <div ref={personaRef} className="flex flex-col items-center z-10 gap-2">
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 shadow-sm transition-colors duration-300 ${getStageClass('Persona')}`}>
-            <span className={`material-symbols-outlined ${getIconClass('Persona')}`}>account_circle</span>
+
+      {/* Grid container to guarantee absolute perfect layout alignment & prevent narrow wrapping/smushing! */}
+      <div 
+        ref={containerRef} 
+        className="relative h-36 w-full grid grid-cols-5 items-center justify-items-center px-2 z-10"
+      >
+        
+        {/* Persona Node */}
+        <div ref={personaRef} className="flex flex-col items-center gap-2.5 text-center w-full min-w-0">
+          <div className={`w-11 h-11 rounded-full flex items-center justify-center border-2 shadow-sm transition-all duration-300 shrink-0 ${getStageClass('Persona')}`}>
+            <span className={`material-symbols-outlined text-base ${getIconClass('Persona')}`}>account_circle</span>
           </div>
-          <span className="text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant">Persona</span>
+          <span className={`text-[9px] font-label uppercase tracking-wider transition-all truncate w-full ${getLabelClass('Persona')}`}>
+            Persona
+          </span>
         </div>
-        <div ref={ingestionRef} className="flex flex-col items-center z-10 gap-2">
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 shadow-sm transition-colors duration-300 ${getStageClass('Ingestion')}`}>
-            <span className={`material-symbols-outlined ${getIconClass('Ingestion')}`}>download</span>
+
+        {/* Ingestion Node */}
+        <div ref={ingestionRef} className="flex flex-col items-center gap-2.5 text-center w-full min-w-0">
+          <div className={`w-11 h-11 rounded-full flex items-center justify-center border-2 shadow-sm transition-all duration-300 shrink-0 ${getStageClass('Ingestion')}`}>
+            <span className={`material-symbols-outlined text-base ${getIconClass('Ingestion')}`}>download</span>
           </div>
-          <span className="text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant">Ingestion</span>
+          <span className={`text-[9px] font-label uppercase tracking-wider transition-all truncate w-full ${getLabelClass('Ingestion')}`}>
+            Ingestion
+          </span>
         </div>
-        <div ref={strategyRef} className="flex flex-col items-center z-10 gap-2">
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 shadow-sm transition-colors duration-300 ${getStageClass('Strategy')}`}>
-            <span className={`material-symbols-outlined ${getIconClass('Strategy')}`}>psychology</span>
+
+        {/* Strategy Node */}
+        <div ref={strategyRef} className="flex flex-col items-center gap-2.5 text-center w-full min-w-0">
+          <div className={`w-11 h-11 rounded-full flex items-center justify-center border-2 shadow-sm transition-all duration-300 shrink-0 ${getStageClass('Strategy')}`}>
+            <span className={`material-symbols-outlined text-base ${getIconClass('Strategy')}`}>psychology</span>
           </div>
-          <span className="text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant">Strategy</span>
+          <span className={`text-[9px] font-label uppercase tracking-wider transition-all truncate w-full ${getLabelClass('Strategy')}`}>
+            Strategy
+          </span>
         </div>
-        <div ref={tailoringRef} className="flex flex-col items-center z-10 gap-2">
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 shadow-sm transition-colors duration-300 ${getStageClass('Tailoring')}`}>
-            <span className={`material-symbols-outlined ${getIconClass('Tailoring')}`}>architecture</span>
+
+        {/* Tailoring Node */}
+        <div ref={tailoringRef} className="flex flex-col items-center gap-2.5 text-center w-full min-w-0">
+          <div className={`w-11 h-11 rounded-full flex items-center justify-center border-2 shadow-sm transition-all duration-300 shrink-0 ${getStageClass('Tailoring')}`}>
+            <span className={`material-symbols-outlined text-base ${getIconClass('Tailoring')}`}>architecture</span>
           </div>
-          <span className="text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant">Tailoring</span>
+          <span className={`text-[9px] font-label uppercase tracking-wider transition-all truncate w-full ${getLabelClass('Tailoring')}`}>
+            Tailoring
+          </span>
         </div>
-        <div ref={submissionRef} className="flex flex-col items-center z-10 gap-2">
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 shadow-sm transition-colors duration-300 ${getStageClass('Submission')}`}>
-            <span className={`material-symbols-outlined ${getIconClass('Submission')}`}>send</span>
+
+        {/* Submission Node */}
+        <div ref={submissionRef} className="flex flex-col items-center gap-2.5 text-center w-full min-w-0">
+          <div className={`w-11 h-11 rounded-full flex items-center justify-center border-2 shadow-sm transition-all duration-300 shrink-0 ${getStageClass('Submission')}`}>
+            <span className={`material-symbols-outlined text-base ${getIconClass('Submission')}`}>send</span>
           </div>
-          <span className="text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant">Submission</span>
+          <span className={`text-[9px] font-label uppercase tracking-wider transition-all truncate w-full ${getLabelClass('Submission')}`}>
+            Submission
+          </span>
         </div>
 
         {/* Animated Beams */}
-        <AnimatedBeam containerRef={containerRef} fromRef={personaRef} toRef={ingestionRef} curvature={-20} />
-        <AnimatedBeam containerRef={containerRef} fromRef={ingestionRef} toRef={strategyRef} curvature={20} />
-        <AnimatedBeam containerRef={containerRef} fromRef={strategyRef} toRef={tailoringRef} curvature={-20} />
-        <AnimatedBeam containerRef={containerRef} fromRef={tailoringRef} toRef={submissionRef} curvature={20} />
+        <AnimatedBeam containerRef={containerRef} fromRef={personaRef} toRef={ingestionRef} curvature={-15} pathColor="#e2e8f0" gradientStartColor="#10b981" gradientStopColor="#059669" />
+        <AnimatedBeam containerRef={containerRef} fromRef={ingestionRef} toRef={strategyRef} curvature={15} pathColor="#e2e8f0" gradientStartColor="#10b981" gradientStopColor="#059669" />
+        <AnimatedBeam containerRef={containerRef} fromRef={strategyRef} toRef={tailoringRef} curvature={-15} pathColor="#e2e8f0" gradientStartColor="#10b981" gradientStopColor="#059669" />
+        <AnimatedBeam containerRef={containerRef} fromRef={tailoringRef} toRef={submissionRef} curvature={15} pathColor="#e2e8f0" gradientStartColor="#10b981" gradientStopColor="#059669" />
       </div>
     </section>
   );

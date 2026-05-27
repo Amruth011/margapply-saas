@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { PipelineVisualizer } from "@/components/dashboard/pipeline-visualizer";
 import { StatsGrid } from "@/components/dashboard/stats-grid";
 import { LedgerTable } from "@/components/dashboard/ledger-table";
@@ -13,6 +13,45 @@ import { ActiveAgents } from "@/components/dashboard/active-agents";
 import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
+  const [activeMobileTab, setActiveMobileTab] = useState("overview");
+
+  // Synchronize mobile bottom nav active item on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = [
+        { id: "overview-section", name: "overview" },
+        { id: "resume-section", name: "resume" },
+        { id: "analytics-section", name: "analytics" },
+        { id: "applications-section", name: "applications" },
+      ];
+
+      const scrollPos = window.scrollY + 150; // offset
+
+      for (const section of sections) {
+        const el = document.getElementById(section.id);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPos >= top && scrollPos < top + height) {
+            setActiveMobileTab(section.name);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleMobileTabClick = (tabName: string, sectionId: string) => {
+    setActiveMobileTab(tabName);
+    const el = document.getElementById(sectionId);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <>
       <link 
@@ -41,7 +80,7 @@ export default function DashboardPage() {
       `}} />
       
       {/* Premium Outer Organic Background Frame */}
-      <div className="bg-[#f0f4f1] min-h-screen w-full relative flex items-center justify-center p-0 md:p-6 lg:p-8 overflow-hidden font-sans select-none">
+      <div id="overview-section" className="bg-[#f0f4f1] min-h-screen w-full relative flex items-center justify-center p-0 md:p-6 lg:p-8 overflow-hidden font-sans select-none">
         
         {/* Animated Natural Gradients Background Blobs */}
         <div className="absolute top-10 left-10 w-96 h-96 rounded-full bg-emerald-200/40 blur-3xl pointer-events-none animate-pulse duration-5000"></div>
@@ -65,6 +104,11 @@ export default function DashboardPage() {
             {/* Content Body */}
             <main className="flex-grow px-6 md:px-10 pb-10 w-full max-w-full">
               
+              {/* LangGraph Node progress tracker visualizer - Prominently at the top spanning full dashboard width! */}
+              <div className="mb-8">
+                <PipelineVisualizer />
+              </div>
+
               {/* Two Column Grid Layout */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
@@ -72,11 +116,12 @@ export default function DashboardPage() {
                 <div className="lg:col-span-2 flex flex-col gap-8">
                   
                   {/* Resume Uploader / Candidate Persona Card */}
-                  <ResumeUploader />
+                  <div id="resume-section">
+                    <ResumeUploader />
+                  </div>
 
                   {/* Stunning Green Gradient Performance Banner */}
                   <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#bbf7d0] via-[#86efac] to-[#d9f99d] p-8 shadow-[0_4px_20px_rgba(34,197,94,0.05)] border border-emerald-200/20 flex flex-col justify-between min-h-[220px]">
-                    {/* Abstract circular spinner branding animation */}
                     <div className="absolute -right-16 -bottom-16 w-64 h-64 opacity-[0.08] pointer-events-none flex items-center justify-center">
                       <span className="material-symbols-outlined text-[280px] text-emerald-950 font-light animate-spin" style={{ animationDuration: '40s' }}>
                         spa
@@ -102,25 +147,26 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  {/* Core Stats Bento Bento Cards */}
-                  <StatsGrid />
-
-                  {/* Trend Velocity Chart */}
-                  <TrendGraph />
+                  {/* Wrapper for Insights & Velocity (Stats + Chart) */}
+                  <div id="analytics-section" className="flex flex-col gap-8 scroll-mt-6">
+                    {/* Core Stats Bento Cards */}
+                    <StatsGrid />
+                    {/* Trend Velocity Chart */}
+                    <TrendGraph />
+                  </div>
 
                   {/* Application History Table */}
-                  <LedgerTable />
+                  <div id="applications-section">
+                    <LedgerTable />
+                  </div>
 
                 </div>
 
-                {/* Right Columns (1/3 size): Subagents running card, active visualizer */}
+                {/* Right Columns (1/3 size): Subagents running card list */}
                 <div className="lg:col-span-1 flex flex-col gap-8">
                   
                   {/* Active Subagents Card List */}
                   <ActiveAgents />
-
-                  {/* Animated LangGraph Pipeline Beam Node Visualizer */}
-                  <PipelineVisualizer />
 
                 </div>
 
@@ -145,24 +191,53 @@ export default function DashboardPage() {
         {/* Modal Gates */}
         <StrategyGate />
 
-        {/* BottomNavBar (Mobile Only) */}
+        {/* Mobile Bottom Navigation Bar (Fully Functional & Linked!) */}
         <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-slate-150 flex justify-around items-center h-16 px-4 z-50">
-          <Button variant="ghost" className="flex flex-col items-center gap-1 text-emerald-600 h-auto p-2 rounded-xl">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>dashboard</span>
-            <span className="text-[10px] font-label font-bold">Dashboard</span>
+          
+          <Button 
+            variant="ghost" 
+            onClick={() => handleMobileTabClick("overview", "overview-section")}
+            className={`flex flex-col items-center gap-1 h-auto p-2 rounded-xl ${
+              activeMobileTab === "overview" ? "text-emerald-600 font-bold" : "text-slate-450"
+            }`}
+          >
+            <span className="material-symbols-outlined" style={{ fontVariationSettings: activeMobileTab === "overview" ? "'FILL' 1" : "'FILL' 0" }}>dashboard</span>
+            <span className="text-[10px] font-label">Overview</span>
           </Button>
-          <Button variant="ghost" className="flex flex-col items-center gap-1 text-slate-400 h-auto p-2 rounded-xl">
-            <span className="material-symbols-outlined">work</span>
-            <span className="text-[10px] font-label">Apps</span>
+
+          <Button 
+            variant="ghost" 
+            onClick={() => handleMobileTabClick("resume", "resume-section")}
+            className={`flex flex-col items-center gap-1 h-auto p-2 rounded-xl ${
+              activeMobileTab === "resume" ? "text-emerald-600 font-bold" : "text-slate-450"
+            }`}
+          >
+            <span className="material-symbols-outlined" style={{ fontVariationSettings: activeMobileTab === "resume" ? "'FILL' 1" : "'FILL' 0" }}>account_circle</span>
+            <span className="text-[10px] font-label">Resume</span>
           </Button>
-          <Button variant="ghost" className="flex flex-col items-center gap-1 text-slate-400 h-auto p-2 rounded-xl">
-            <span className="material-symbols-outlined">bolt</span>
-            <span className="text-[10px] font-label">Strategy</span>
-          </Button>
-          <Button variant="ghost" className="flex flex-col items-center gap-1 text-slate-400 h-auto p-2 rounded-xl">
-            <span className="material-symbols-outlined">analytics</span>
+
+          <Button 
+            variant="ghost" 
+            onClick={() => handleMobileTabClick("analytics", "analytics-section")}
+            className={`flex flex-col items-center gap-1 h-auto p-2 rounded-xl ${
+              activeMobileTab === "analytics" ? "text-emerald-600 font-bold" : "text-slate-450"
+            }`}
+          >
+            <span className="material-symbols-outlined" style={{ fontVariationSettings: activeMobileTab === "analytics" ? "'FILL' 1" : "'FILL' 0" }}>analytics</span>
             <span className="text-[10px] font-label">Insights</span>
           </Button>
+
+          <Button 
+            variant="ghost" 
+            onClick={() => handleMobileTabClick("applications", "applications-section")}
+            className={`flex flex-col items-center gap-1 h-auto p-2 rounded-xl ${
+              activeMobileTab === "applications" ? "text-emerald-600 font-bold" : "text-slate-450"
+            }`}
+          >
+            <span className="material-symbols-outlined" style={{ fontVariationSettings: activeMobileTab === "applications" ? "'FILL' 1" : "'FILL' 0" }}>assignment_turned_in</span>
+            <span className="text-[10px] font-label">Ledger</span>
+          </Button>
+
         </div>
 
       </div>
