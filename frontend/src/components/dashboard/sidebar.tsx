@@ -12,9 +12,9 @@ export function Sidebar() {
         
         {/* Brand Logo */}
         <div className="flex items-center gap-2.5 px-2">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center shadow-[0_4px_12px_rgba(16,185,129,0.2)]">
-            <span className="material-symbols-outlined text-white text-lg font-black" style={{ fontVariationSettings: "'wght' 700" }}>
-              spa
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center shadow-[0_4px_12px_rgba(16,185,129,0.2)] select-none">
+            <span className="font-headline font-black text-white text-sm tracking-tighter">
+              MA
             </span>
           </div>
           <div>
@@ -96,7 +96,7 @@ export function Sidebar() {
           className="w-full h-12 bg-gradient-to-r from-green-300 via-emerald-300 to-lime-300 text-emerald-950 font-bold hover:shadow-lg shadow-sm rounded-xl transition-all duration-300 hover:scale-[1.02] border-none flex items-center justify-center gap-2 cursor-pointer shadow-emerald-200/50"
         >
           <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>
-            sparkles
+            auto_awesome
           </span>
           <span className="font-headline font-bold text-xs tracking-wide">Deploy New Agent</span>
         </Button>
