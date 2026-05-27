@@ -1,33 +1,58 @@
+"use client";
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 
 export function Topbar() {
   return (
-    <header className="bg-background/80 backdrop-blur-md w-full top-0 sticky border-b border-outline-variant z-50">
-      <div className="flex justify-between items-center px-6 h-16 w-full max-w-screen-2xl mx-auto">
-        <div className="flex items-center gap-2">
-          <div className="bg-primary/10 p-1.5 rounded-lg">
-            <span className="material-symbols-outlined text-primary text-xl">terminal</span>
-          </div>
-          <h1 className="text-xl font-headline font-black tracking-tight text-on-surface">RecruitAI</h1>
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="hidden md:flex gap-4 items-center">
-            <Button variant="ghost" className="font-body text-primary font-bold border-b-2 border-primary rounded-none h-16 hover:bg-transparent">
-              Dashboard
-            </Button>
-            <Button variant="ghost" className="font-body text-on-surface-variant rounded-full h-9">
-              Applications
-            </Button>
-            <Button variant="ghost" className="font-body text-on-surface-variant rounded-full h-9">
-              Strategy
-            </Button>
-          </div>
-          <div className="w-9 h-9 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden border-2 border-primary/20 cursor-pointer hover:border-primary/50 transition-colors">
-            <img alt="User profile avatar" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoN8kcUzXBDcdNFyUGqEQbd8lnMHXl-ZLXq-MQs0MVIahPjKRYJV3At9rBbiywKQWaINAaCb3WbriNOsWJmP07_mtmLnnfsgPZ2EEpzOVpcZ4K3w8FG1DvrVJQJqYlopz1PsUuI52juLy9MKwHpaUfrsvW22wSWXMRpw9h7c0-GdUwcnjfPVIesovW07jXkOhXD4h53WVnkw4yVxCo0HMgOdKjhwucFZWF6dW6pji0cRaRIGCso8ZY2oMhHQR87Ww6hYowU6iIEjJF"/>
-          </div>
-        </div>
+    <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 select-none">
+      
+      {/* Header Title & Subtitle */}
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-headline font-black text-slate-900 tracking-tight leading-tight">
+          Overview
+        </h1>
+        <p className="text-xs sm:text-sm font-label text-slate-400 mt-1 font-medium">
+          Autonomous career submission across your kinetic career search.
+        </p>
       </div>
-    </header>
+
+      {/* Header Actions & Profile Avatars */}
+      <div className="flex items-center gap-4 shrink-0 w-full sm:w-auto justify-between sm:justify-end">
+        
+        {/* Avatar Stack */}
+        <div className="flex items-center gap-1 bg-slate-50 border border-slate-100/50 pl-3 pr-2 py-1.5 rounded-full shadow-sm">
+          <div className="flex -space-x-2">
+            <img 
+              className="w-7 h-7 rounded-full border-2 border-white object-cover" 
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100" 
+              alt="Candidate 1"
+            />
+            <img 
+              className="w-7 h-7 rounded-full border-2 border-white object-cover" 
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100" 
+              alt="Candidate 2"
+            />
+            <img 
+              className="w-7 h-7 rounded-full border-2 border-white object-cover" 
+              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100" 
+              alt="Candidate 3"
+            />
+          </div>
+          <span className="text-[10px] font-label font-black text-slate-400 pl-1.5">
+            +12
+          </span>
+        </div>
+
+        {/* Date Filter Dropdown */}
+        <div className="border border-slate-100 bg-white hover:bg-slate-50 rounded-xl px-3.5 py-2 flex items-center gap-2 cursor-pointer shadow-sm transition-all select-none">
+          <span className="material-symbols-outlined text-slate-400 text-sm">calendar_today</span>
+          <span className="font-label text-xs font-bold text-slate-700">Last 30 Days</span>
+          <span className="material-symbols-outlined text-slate-400 text-xs">keyboard_arrow_down</span>
+        </div>
+
+      </div>
+
+    </div>
   );
 }

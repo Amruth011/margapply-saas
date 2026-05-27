@@ -59,7 +59,7 @@ export function TrendGraph() {
             <Line 
               type="monotone" 
               dataKey="applications" 
-              stroke="#6366f1" 
+              stroke="#16a34a" 
               strokeWidth={3}
               dot={{ r: 4, strokeWidth: 2 }}
               activeDot={{ r: 6 }} 
@@ -67,7 +67,7 @@ export function TrendGraph() {
             <Line 
               type="monotone" 
               dataKey="success" 
-              stroke="#10b981" 
+              stroke="#86efac" 
               strokeWidth={3}
               dot={{ r: 4, strokeWidth: 2 }}
               activeDot={{ r: 6 }} 

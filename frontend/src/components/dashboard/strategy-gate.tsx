@@ -38,7 +38,7 @@ function SubmissionToast({ message, type, onDismiss }: ToastProps) {
       >
         <span
           className={`material-symbols-outlined text-base ${
-            type === "success" ? "text-emerald-600" : "text-red-500"
+            type === "success" ? "text-emerald-650" : "text-red-500"
           }`}
           style={{ fontVariationSettings: "'FILL' 1" }}
         >
@@ -74,8 +74,8 @@ interface RoleCardProps {
 
 function RoleCard({ role, index, isSelected, isSubmitting, onSelect }: RoleCardProps) {
   const scoreColor =
-    role.score >= 90 ? "text-emerald-600 bg-emerald-50 border-emerald-200" :
-    role.score >= 80 ? "text-indigo-600 bg-indigo-50 border-indigo-200" :
+    role.score >= 90 ? "text-emerald-650 bg-emerald-50 border-emerald-200" :
+    role.score >= 80 ? "text-emerald-700 bg-emerald-50/50 border-emerald-150" :
                        "text-amber-600 bg-amber-50 border-amber-200";
 
   const initials = role.company
@@ -93,8 +93,8 @@ function RoleCard({ role, index, isSelected, isSubmitting, onSelect }: RoleCardP
         w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left
         transition-all duration-200 group
         ${isSelected
-          ? "border-indigo-500 bg-indigo-50/60 shadow-sm shadow-indigo-100"
-          : "border-slate-100 bg-slate-50/40 hover:border-slate-300 hover:bg-slate-50"}
+          ? "border-emerald-500 bg-emerald-50/40 shadow-sm shadow-emerald-100"
+          : "border-slate-100 bg-slate-50/40 hover:border-slate-350 hover:bg-slate-50"}
         ${isSubmitting ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}
       `}
     >
@@ -103,7 +103,7 @@ function RoleCard({ role, index, isSelected, isSubmitting, onSelect }: RoleCardP
         className={`
           w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xs shrink-0
           transition-colors duration-200
-          ${isSelected ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-500 group-hover:bg-slate-200"}
+          ${isSelected ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-500 group-hover:bg-slate-200"}
         `}
       >
         {initials}
@@ -125,7 +125,7 @@ function RoleCard({ role, index, isSelected, isSubmitting, onSelect }: RoleCardP
             w-5 h-5 rounded-full border-2 flex items-center justify-center
             transition-all duration-200
             ${isSelected
-              ? "border-indigo-500 bg-indigo-500"
+              ? "border-emerald-500 bg-emerald-500"
               : "border-slate-300 bg-white"}
           `}
         >
@@ -159,7 +159,6 @@ export function StrategyGate() {
   const [visible, setVisible] = useState(false);
   const hasSubmittedRef = useRef(false);
 
-  // Show modal when Strategy gate opens; pre-select the top role
   useEffect(() => {
     if (state.pipelineStage === "Strategy" && state.status === "Awaiting_Approval") {
       setTimeout(() => {
@@ -172,7 +171,6 @@ export function StrategyGate() {
     }
   }, [state.pipelineStage, state.status, state.suggested_roles, selectedRole]);
 
-  // React to submission result arriving over WebSocket
   useEffect(() => {
     if (
       (state.status === "Submitted" || state.status === "SubmissionFailed") &&
@@ -197,7 +195,6 @@ export function StrategyGate() {
           });
         }, 0);
       }
-      // Close the modal after a short delay
       setTimeout(() => setVisible(false), 800);
     }
   }, [state.status, state.submission_result]);
@@ -213,7 +210,6 @@ export function StrategyGate() {
         body: JSON.stringify({ selected_role: selectedRole }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      // Don't setIsSubmitting(false) here — wait for WS status: "Submitted"
     } catch (e) {
       console.error("Submit failed:", e);
       setIsSubmitting(false);
@@ -223,7 +219,6 @@ export function StrategyGate() {
 
   const handleReject = async () => {
     if (isSubmitting) return;
-    // Reject = approve without a specific role selection (pipeline continues)
     try {
       await fetch(`${API_URL}/approve-strategy`, { method: "POST" });
     } catch (e) {
@@ -232,7 +227,6 @@ export function StrategyGate() {
     setVisible(false);
   };
 
-  // Don't render while invisible or during non-Strategy stages
   if (!visible || state.pipelineStage !== "Strategy") {
     return toast ? (
       <SubmissionToast
@@ -245,51 +239,50 @@ export function StrategyGate() {
 
   return (
     <>
-      {/* ── Modal ── */}
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-        <div className="w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-300">
+        <div className="w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-300 select-none">
 
           {/* Header */}
-          <div className="px-6 py-5 border-b border-slate-100">
+          <div className="px-6 py-5 border-b border-slate-105">
             <div className="flex items-center gap-3 mb-1">
-              <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
                 <span className="material-symbols-outlined text-white text-base" style={{ fontVariationSettings: "'FILL' 1" }}>
                   psychology
                 </span>
               </div>
               <h2 className="text-lg font-headline font-bold text-slate-900">Strategy Gate</h2>
             </div>
-            <p className="text-sm text-slate-500 ml-11">
+            <p className="text-sm text-slate-400 font-label ml-11 mt-0.5">
               Select a role to target — the agent will submit your application automatically.
             </p>
           </div>
 
-          {/* ── Lumina JD Context Panel ── */}
+          {/* Lumina JD Context Panel */}
           {state.jd_title && (
-            <div className="px-6 pt-4 pb-3 bg-indigo-50/70 border-b border-indigo-100">
+            <div className="px-6 pt-4 pb-3 bg-emerald-50/40 border-b border-emerald-100/50">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-[10px] font-label font-bold uppercase tracking-widest text-indigo-400 mb-0.5">
+                  <p className="text-[10px] font-label font-bold uppercase tracking-widest text-emerald-600 mb-0.5">
                     Analysed JD
                   </p>
                   <p className="font-bold text-slate-900 text-base leading-tight">{state.jd_title}</p>
                   {state.jd_company && (
-                    <p className="text-sm text-slate-500 mt-0.5">{state.jd_company}</p>
+                    <p className="text-sm text-slate-400 font-label mt-0.5">{state.jd_company}</p>
                   )}
                 </div>
                 <div className="flex flex-col items-end gap-1.5 shrink-0">
                   {state.jd_grade_score !== undefined && (
-                    <span className="text-sm font-bold text-white bg-indigo-600 px-2.5 py-1 rounded-full">
+                    <span className="text-sm font-bold text-white bg-emerald-600 px-2.5 py-1 rounded-full shadow-sm shadow-emerald-100">
                       {state.jd_grade_score}/100
                     </span>
                   )}
                   {state.jd_source && (
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full font-label ${
+                    <span className={`text-[9px] font-black px-2 py-0.5 rounded font-label uppercase tracking-widest ${
                       state.jd_source === "llm"
-                        ? "bg-emerald-100 text-emerald-700"
+                        ? "bg-emerald-50 border border-emerald-250 text-emerald-700"
                         : state.jd_source === "heuristic"
-                        ? "bg-amber-100 text-amber-700"
-                        : "bg-red-100 text-red-700"
+                        ? "bg-amber-50 border border-amber-250 text-amber-700"
+                        : "bg-red-50 border border-red-250 text-red-700"
                     }`}>
                       {state.jd_source === "llm" ? "✦ LLM Parse" : state.jd_source === "heuristic" ? "⚡ Heuristic" : "✕ Error"}
                     </span>
@@ -301,7 +294,7 @@ export function StrategyGate() {
                   {state.jd_skills.slice(0, 8).map((skill) => (
                     <span
                       key={skill}
-                      className="text-[11px] font-label font-semibold bg-white text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded-full"
+                      className="text-[11px] font-label font-bold bg-white text-emerald-700 border border-emerald-200/60 px-2.5 py-0.5 rounded-full shadow-sm"
                     >
                       {skill}
                     </span>
@@ -313,7 +306,7 @@ export function StrategyGate() {
 
           {/* Role cards */}
           <div className="p-5 flex flex-col gap-2.5">
-            <p className="text-[11px] font-label font-bold uppercase tracking-widest text-slate-400 mb-1">
+            <p className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 mb-1">
               Select role to apply
             </p>
             {state.suggested_roles?.map((role, idx) => (
@@ -329,12 +322,12 @@ export function StrategyGate() {
           </div>
 
           {/* Footer */}
-          <div className="px-5 py-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between gap-3">
+          <div className="px-5 py-4 border-t border-slate-100 bg-slate-50/30 flex items-center justify-between gap-3">
             <Button
               variant="ghost"
               onClick={handleReject}
               disabled={isSubmitting}
-              className="px-4 py-2 text-sm font-bold text-slate-500"
+              className="px-4 py-2 text-sm font-bold text-slate-400"
             >
               Skip
             </Button>
@@ -344,10 +337,10 @@ export function StrategyGate() {
               onClick={handleApprove}
               disabled={!selectedRole || isSubmitting}
               className={`
-                flex items-center gap-2 px-6 py-2.5 text-sm font-bold text-white
+                flex items-center gap-2 px-6 py-2.5 text-sm font-bold text-white rounded-xl shadow-sm
                 ${!selectedRole || isSubmitting
-                  ? "bg-indigo-400 cursor-not-allowed"
-                  : "bg-indigo-600 hover:bg-indigo-700"}
+                  ? "bg-emerald-400 cursor-not-allowed"
+                  : "bg-emerald-600 hover:bg-emerald-700 cursor-pointer shadow-emerald-100"}
               `}
             >
               {isSubmitting ? (
@@ -368,7 +361,6 @@ export function StrategyGate() {
         </div>
       </div>
 
-      {/* Toast rendered outside the modal so it persists after modal closes */}
       {toast && (
         <SubmissionToast
           message={toast.message}
