@@ -3,7 +3,22 @@
 import React, { useEffect, useState } from "react";
 
 const getApiUrl = () => {
-  const url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  let url = process.env.NEXT_PUBLIC_API_URL;
+
+  // Self-healing: if running on Vercel but env variable is dead/missing, fallback to active Railway domain
+  if (typeof window !== "undefined") {
+    const isVercel = window.location.hostname.includes("vercel.app");
+    if (isVercel) {
+      if (!url || url.includes("localhost") || url.includes("margapply.com")) {
+        url = "https://margapply-saas-production.up.railway.app";
+      }
+    }
+  }
+
+  if (!url) {
+    url = "http://localhost:8000";
+  }
+
   return url.endsWith("/") ? url.slice(0, -1) : url;
 };
 const API_URL = getApiUrl();

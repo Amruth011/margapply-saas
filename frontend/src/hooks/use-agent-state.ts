@@ -63,13 +63,21 @@ export interface AgentState {
 
 
 const getWsUrl = (path: string = "/ws/agent-state") => {
-  const envUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (envUrl) {
-    const cleanUrl = envUrl.endsWith("/") ? envUrl.slice(0, -1) : envUrl;
-    const wsBase = cleanUrl.replace(/^http/, "ws");
-    return `${wsBase}${path}`;
+  let envUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  // Self-healing: if running on Vercel but env variable is dead/missing, fallback to active Railway domain
+  if (typeof window !== "undefined") {
+    const isVercel = window.location.hostname.includes("vercel.app");
+    if (isVercel) {
+      if (!envUrl || envUrl.includes("localhost") || envUrl.includes("margapply.com")) {
+        envUrl = "https://margapply-saas-production.up.railway.app";
+      }
+    }
   }
-  return `ws://localhost:8000${path}`;
+
+  const cleanUrl = envUrl ? (envUrl.endsWith("/") ? envUrl.slice(0, -1) : envUrl) : "http://localhost:8000";
+  const wsBase = cleanUrl.replace(/^http/, "ws");
+  return `${wsBase}${path}`;
 };
 
 export function useAgentState() {
