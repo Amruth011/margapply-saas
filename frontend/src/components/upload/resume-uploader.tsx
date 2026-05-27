@@ -151,6 +151,7 @@ export function ResumeUploader() {
           setProfile(result.profile);
           setIsUploading(false);
           setSuccessMessage("Your resume has been successfully parsed and persisted!");
+          window.dispatchEvent(new Event("resumeUploaded"));
         }, 500);
       } else {
         throw new Error(result.error || "Failed parsing the resume.");
