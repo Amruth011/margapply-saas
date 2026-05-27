@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 // ── Static seed rows shown when no live ledger data has arrived yet ────────────
 const SEED_ROWS: LedgerEntry[] = [
   { id: "seed-1", title: "Product Designer", company: "Stripe",    status: "Interviewing", score: 88, timestamp: "2026-05-20T09:00:00Z" },
-  { id: "seed-2", title: "UX Engineer",       company: "Vercel",    status: "Applied",      score: 81, timestamp: "2026-05-22T14:30:00Z" },
+  { id: "seed-2", title: "UX Engineer",       company: "Vercel",    status: "Applied",      score: 81, timestamp: "2026-05-22T14:30:00Z", url: "https://vercel.com/careers" },
   { id: "seed-3", title: "AI Researcher",     company: "Anthropic", status: "Reviewing",    score: 94, timestamp: "2026-05-24T11:15:00Z" },
 ];
 
@@ -28,6 +28,19 @@ const BADGE_STYLES: Record<string, { bg: string; label: string }> = {
 function getBadgeProps(status: string) {
   return BADGE_STYLES[status] ?? { bg: "bg-slate-50 text-slate-500 border-slate-100", label: status.toUpperCase() };
 }
+
+const getApiUrl = () => {
+  let envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (typeof window !== "undefined") {
+    const isVercel = window.location.hostname.includes("vercel.app");
+    if (isVercel) {
+      if (!envUrl || envUrl.includes("localhost") || envUrl.includes("margapply.com")) {
+        envUrl = "https://margapply-saas-production.up.railway.app";
+      }
+    }
+  }
+  return envUrl ? (envUrl.endsWith("/") ? envUrl.slice(0, -1) : envUrl) : "http://localhost:8000";
+};
 
 function formatDate(iso: string) {
   try {
@@ -151,9 +164,9 @@ function LedgerRow({ entry, isNew }: RowProps) {
               </>
             )}
           </Button>
-        ) : entry.status === "Applied" && entry.url ? (
+        ) : entry.status === "Applied" && entry.url && entry.url !== "N/A" ? (
           <a 
-            href={entry.url} 
+            href={entry.url.startsWith("http") ? entry.url : `${getApiUrl()}${entry.url.startsWith("/") ? "" : "/"}${entry.url}`} 
             target="_blank" 
             rel="noopener noreferrer" 
             className="inline-flex items-center justify-center gap-1.5 h-8 px-3 text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-xl transition-colors border border-emerald-200"

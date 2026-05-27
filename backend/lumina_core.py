@@ -214,21 +214,31 @@ async def deconstruct_jd(input_text: str) -> dict:
     Falls back to heuristic parsing if LLM is unavailable.
     """
     jd_text = input_text.strip()
+    original_url = None
 
     # If input looks like a URL, scrape it first
     if re.match(r"https?://", jd_text):
         print(f"[lumina_core] Detected URL — scraping: {jd_text}")
+        original_url = jd_text
         jd_text = await _fetch_url_text(jd_text)
 
     groq_key = os.environ.get("GROQ_API_KEY", "").strip()
 
+    decoded = None
     if groq_key:
         try:
-            return await _llm_decode(jd_text, groq_key)
+            decoded = await _llm_decode(jd_text, groq_key)
         except Exception as e:
             print(f"[lumina_core] LLM decode failed ({e}), falling back to heuristic")
 
-    return _heuristic_decode(jd_text)
+    if not decoded:
+        decoded = _heuristic_decode(jd_text)
+
+    if original_url:
+        decoded["apply_url"] = original_url
+        decoded["source_url"] = original_url
+
+    return decoded
 
 
 def map_to_agent_state(decoded: dict, state: dict) -> dict:
