@@ -65,7 +65,8 @@ export interface AgentState {
 const getWsUrl = (path: string = "/ws/agent-state") => {
   const envUrl = process.env.NEXT_PUBLIC_API_URL;
   if (envUrl) {
-    const wsBase = envUrl.replace(/^http/, "ws");
+    const cleanUrl = envUrl.endsWith("/") ? envUrl.slice(0, -1) : envUrl;
+    const wsBase = cleanUrl.replace(/^http/, "ws");
     return `${wsBase}${path}`;
   }
   return `ws://localhost:8000${path}`;
